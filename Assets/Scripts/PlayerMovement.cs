@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
     public float horizontalInput;
     public float moveSpeed = 5f;
     public float jumpForce = 7f;
+    public float dashForce = 50f;
 
     public bool isGrounded = true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -19,6 +20,14 @@ public class PlayerMovement : MonoBehaviour
     {
         Jump();
         Move();
+        Dash();
+    }
+    void Dash()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            playerRb.AddForce(new Vector2(dashForce, 0), ForceMode2D.Impulse);
+        }
     }
     void Jump()
     {
