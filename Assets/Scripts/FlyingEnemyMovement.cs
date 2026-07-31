@@ -1,11 +1,18 @@
 using UnityEngine;
 
-public class GhostMovement : MonoBehaviour
+public class FlyingEnemyMovement : MonoBehaviour
 {
     [Header("Movement Settings")]
     public float moveSpeed = 2f;
     public float changeStateTime = 2f;
     public float deathYLevel = -3f;
+
+    // Only flying spirits will use this
+    public float lifeTime = 10f;
+
+    [Header("Hover Settings")]
+    public float hoverSpeed = 2f;
+    public float hoverHeight = 1f;
 
     private Rigidbody2D rb;
     private float moveDirection;
@@ -14,8 +21,11 @@ public class GhostMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.gravityScale = 1f;
+        rb.gravityScale = 0f;
         PickNewState();
+
+        // Destroys the flying spirit after 10 seconds
+        Destroy(gameObject, lifeTime);
     }
 
     void Update()
@@ -37,7 +47,8 @@ public class GhostMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.linearVelocity = new Vector2(moveDirection * moveSpeed, rb.linearVelocity.y);
+        float verticalHover = Mathf.Cos(Time.time * hoverSpeed) * hoverHeight;
+        rb.linearVelocity = new Vector2(moveDirection * moveSpeed, verticalHover);
     }
 
     void PickNewState()
@@ -51,12 +62,12 @@ public class GhostMovement : MonoBehaviour
         else if (state == 1)
         {
             moveDirection = 1f;
-            transform.rotation = Quaternion.Euler(0, 0f, 0);
+            transform.rotation = Quaternion.Euler(0, 180f, 0);
         }
         else if (state == 2)
         {
             moveDirection = -1f;
-            transform.rotation = Quaternion.Euler(0, 180f, 0);
+            transform.rotation = Quaternion.Euler(0, 0f, 0);
         }
     }
 }

@@ -1,39 +1,70 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class SpecificEnemySpawner : MonoBehaviour
 {
     [Header("Spawner Configuration")]
+    public GameObject groundPrefab;
+    public GameObject flyingPrefab;
 
-    // Spawn prefab.
-    public GameObject enemyPrefabToSpawn;
-
-    // Number of enemy that spawn from each spawner.
-    public int totalEnemiesToSpawn = 3;
-
-    // The area size where enemies will scatter. Increase this if they spawn inside each other.
+    public int maxEnemies = 3;
     public float spawnRadius = 1.5f;
+    public float respawnDelay = 5f;
+
+    private List<GameObject> groundGhosts = new List<GameObject>();
+    private List<GameObject> flyingGhosts = new List<GameObject>();
+    private bool isSpawning = false;
 
     void Start()
     {
-        for (int currentEnemyIndex = 0; currentEnemyIndex < totalEnemiesToSpawn; currentEnemyIndex++)
+        for (int i = 0; i < maxEnemies; i++)
         {
             SpawnSingleEnemy();
         }
     }
 
-    void SpawnSingleEnemy()
+    void Update()
     {
-        // Gets a random position inside a circle to scatter the spawns.
-        Vector2 randomSpawnOffset = Random.insideUnitCircle * spawnRadius;
-        Vector2 finalSpawnPosition = (Vector2)transform.position + randomSpawnOffset;
+        // Purge dead enemies from lists
+        groundGhosts.RemoveAll(ghost => ghost == null);
+        flyingGhosts.RemoveAll(ghost => ghost == null);
 
-        Instantiate(enemyPrefabToSpawn, finalSpawnPosition, Quaternion.identity);
+        int totalActive = groundGhosts.Count + flyingGhosts.Count;
+
+        if (totalActive < maxEnemies && !isSpawning)
+        {
+            StartCoroutine(RespawnRoutine());
+        }
     }
 
-    private void OnDrawGizmosSelected()
+    private IEnumerator RespawnRoutine()
     {
-        // Draws a red circle in the editor to show the scatter area.
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, spawnRadius);
+        isSpawning = true;
+        yield return new WaitForSeconds(respawnDelay);
+
+        int totalActive = groundGhosts.Count + flyingGhosts.Count;
+        if (totalActive < maxEnemies)
+        {
+            SpawnSingleEnemy();
+        }
+
+        isSpawning = false;
+    }
+
+    void SpawnSingleEnemy()
+    {
+        Vector2 randomOffset = Random.insideUnitCircle * spawnRadius;
+        Vector2 spawnPos = (Vector2)transform.position + randomOffset;
+
+        // Determine which type is lacking, default to random if equal
+        bool spawnGround = groundGhosts.Count < flyingGhosts.Count;
+        if (groundGhosts.Count == flyingGhosts.Count) spawnGround = Random.value > 0.5f;
+
+        GameObject prefabToSpawn = spawnGround ? groundPrefab : flyingPrefab;
+        GameObject newGhost = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
+
+        if (spawnGround) groundGhosts.Add(newGhost);
+        else flyingGhosts.Add(newGhost);
     }
 }

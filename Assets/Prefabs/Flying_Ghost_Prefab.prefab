@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 4252068457925720627}
   - component: {fileID: 7787920295618990885}
   - component: {fileID: 1138110851418312098}
-  - component: {fileID: -6877447904926768785}
+  - component: {fileID: 27480254909960814}
   m_Layer: 3
-  m_Name: Ghost_Prototype
+  m_Name: Flying_Ghost_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84,7 +84,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 1f7b9d6e8a153ba4992b29a82cca1d84, type: 3}
+  m_Sprite: {fileID: -8716530363669133318, guid: 72e3ea6af57f69846af7208ddd5331e4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -129,8 +129,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.2516413, y: -0.37076998}
-  m_Size: {x: 2.492496, y: 3.323656}
+  m_Offset: {x: 0.08182871, y: -0.05720818}
+  m_Size: {x: 3.159436, y: 3.9507797}
   m_Direction: 0
 --- !u!50 &1138110851418312098
 Rigidbody2D:
@@ -147,7 +147,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 0.3
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -159,7 +159,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &-6877447904926768785
+--- !u!114 &27480254909960814
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -168,9 +168,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 243334647547269304}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1241fdeba0607bf448837c33aadd5b39, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f61551041dc8204080e74cc0072464c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GhostMovement
+  m_EditorClassIdentifier: Assembly-CSharp::FlyingEnemyMovement
   moveSpeed: 2
   changeStateTime: 2
   deathYLevel: -3
+  hoverSpeed: 2
+  hoverHeight: 1
