@@ -7,14 +7,28 @@ public class GhostMovement : MonoBehaviour
     public float changeStateTime = 2f;
     public float deathYLevel = -3f;
 
+    [Header("Attack Settings")]
+    public float detectionRadius = 2f;
+    public float dashForce = 50f;
+    public float dashCooldown = 2f;
+
     private Rigidbody2D rb;
     private float moveDirection;
     private float timer;
+    private float attackTimer;
+    private Transform player;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 1f;
+
+        // Randomizes the starting timer so they don't move in perfect sync
+        timer = Random.Range(0f, changeStateTime);
+
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null) player = playerObj.transform;
+
         PickNewState();
     }
 
@@ -26,12 +40,24 @@ public class GhostMovement : MonoBehaviour
             return;
         }
 
-        timer += Time.deltaTime;
+        attackTimer -= Time.deltaTime;
 
-        if (timer >= changeStateTime)
+        if (player != null && Vector2.Distance(transform.position, player.position) <= detectionRadius)
         {
-            PickNewState();
-            timer = 0f;
+            if (attackTimer <= 0f)
+            {
+                DashAttack();
+                attackTimer = dashCooldown;
+            }
+        }
+        else
+        {
+            timer += Time.deltaTime;
+            if (timer >= changeStateTime)
+            {
+                PickNewState();
+                timer = 0f;
+            }
         }
     }
 
@@ -40,10 +66,20 @@ public class GhostMovement : MonoBehaviour
         rb.linearVelocity = new Vector2(moveDirection * moveSpeed, rb.linearVelocity.y);
     }
 
+    void DashAttack()
+    {
+        float dirX = Mathf.Sign(player.position.x - transform.position.x);
+        moveDirection = dirX;
+
+        // 0 degrees for right, 180 degrees for left
+        transform.rotation = Quaternion.Euler(0, dirX > 0 ? 0f : 180f, 0);
+
+        rb.AddForce(new Vector2(dashForce * dirX, 10f), ForceMode2D.Impulse);
+    }
+
     void PickNewState()
     {
         int state = Random.Range(0, 3);
-
         if (state == 0)
         {
             moveDirection = 0f;

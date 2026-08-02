@@ -6,9 +6,11 @@ public class FlyingEnemyMovement : MonoBehaviour
     public float moveSpeed = 2f;
     public float changeStateTime = 2f;
     public float deathYLevel = -3f;
-
-    // Only flying spirits will use this
     public float lifeTime = 10f;
+
+    [Header("Attack Settings")]
+    public float detectionRadius = 10f;
+    public float chaseSpeed = 0.5f;
 
     [Header("Hover Settings")]
     public float hoverSpeed = 2f;
@@ -17,14 +19,17 @@ public class FlyingEnemyMovement : MonoBehaviour
     private Rigidbody2D rb;
     private float moveDirection;
     private float timer;
+    private Transform player;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0f;
-        PickNewState();
 
-        // Destroys the flying spirit after 10 seconds
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null) player = playerObj.transform;
+
+        PickNewState();
         Destroy(gameObject, lifeTime);
     }
 
@@ -36,25 +41,38 @@ public class FlyingEnemyMovement : MonoBehaviour
             return;
         }
 
-        timer += Time.deltaTime;
-
-        if (timer >= changeStateTime)
+        if (player != null && Vector2.Distance(transform.position, player.position) <= detectionRadius)
         {
-            PickNewState();
-            timer = 0f;
+            // Face the player and move towards them
+            float dirX = Mathf.Sign(player.position.x - transform.position.x);
+            moveDirection = dirX;
+            transform.rotation = Quaternion.Euler(0, dirX > 0 ? 180f : 0f, 0);
+        }
+        else
+        {
+            timer += Time.deltaTime;
+            if (timer >= changeStateTime)
+            {
+                PickNewState();
+                timer = 0f;
+            }
         }
     }
 
     void FixedUpdate()
     {
         float verticalHover = Mathf.Cos(Time.time * hoverSpeed) * hoverHeight;
-        rb.linearVelocity = new Vector2(moveDirection * moveSpeed, verticalHover);
+
+        // Dynamically apply slow speed if player is in range
+        bool isChasing = (player != null && Vector2.Distance(transform.position, player.position) <= detectionRadius);
+        float currentSpeed = isChasing ? chaseSpeed : moveSpeed;
+
+        rb.linearVelocity = new Vector2(moveDirection * currentSpeed, verticalHover);
     }
 
     void PickNewState()
     {
         int state = Random.Range(0, 3);
-
         if (state == 0)
         {
             moveDirection = 0f;
