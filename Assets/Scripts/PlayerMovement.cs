@@ -8,9 +8,9 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 5f;
     public float jumpForce = 7f;
 
-    public float dashSpeed = 15f;
+    public float dashSpeed = 18f;
     public float dashDuration = 0.2f;
-    public float dashCooldown = 1f;
+    public float dashCooldown = 0.6f;
 
     private bool isDashing;
     private bool canDash = true;
@@ -31,11 +31,7 @@ public class PlayerMovement : MonoBehaviour
 
         Jump();
         Move();
-
-        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
-        {
-            StartCoroutine(DashRoutine());
-        }
+        Dash();
     }
 
     private IEnumerator DashRoutine()
@@ -57,6 +53,13 @@ public class PlayerMovement : MonoBehaviour
 
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
+    }
+    void Dash()
+    {
+        if (Input.GetKeyDown(KeyCode.C) && canDash)
+        {
+            StartCoroutine(DashRoutine());
+        }
     }
 
     void Jump()
