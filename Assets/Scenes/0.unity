@@ -285,8 +285,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31b077fc19104614595337b90d6bc4bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpecificEnemySpawner
-  groundPrefab: {fileID: 0}
-  flyingPrefab: {fileID: 0}
+  groundPrefab: {fileID: 243334647547269304, guid: 9dc513f02d2b2d042a0bbb01a74091d6, type: 3}
+  flyingPrefab: {fileID: 243334647547269304, guid: be9c97714fc8e2441b1817f18a21d627, type: 3}
   maxEnemies: 3
   spawnRadius: 1.5
   respawnDelay: 5
@@ -439,8 +439,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31b077fc19104614595337b90d6bc4bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpecificEnemySpawner
-  groundPrefab: {fileID: 0}
-  flyingPrefab: {fileID: 0}
+  groundPrefab: {fileID: 243334647547269304, guid: 9dc513f02d2b2d042a0bbb01a74091d6, type: 3}
+  flyingPrefab: {fileID: 243334647547269304, guid: be9c97714fc8e2441b1817f18a21d627, type: 3}
   maxEnemies: 3
   spawnRadius: 1.5
   respawnDelay: 5
