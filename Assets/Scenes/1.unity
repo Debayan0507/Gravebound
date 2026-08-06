@@ -325,7 +325,7 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 64
-  attackCoolDown: 0.5
+  attackCoolDown: 0.3
   isAttacking: 0
 --- !u!1 &353362538
 GameObject:
