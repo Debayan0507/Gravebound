@@ -72,7 +72,7 @@ public class GhostMovement : MonoBehaviour
         moveDirection = dirX;
 
         // 0 degrees for right, 180 degrees for left
-        transform.rotation = Quaternion.Euler(0, dirX > 0 ? 0f : 180f, 0);
+        transform.rotation = Quaternion.Euler(0, dirX > 0 ? 180f : 0f, 0);
 
         rb.AddForce(new Vector2(dashForce * dirX, 10f), ForceMode2D.Impulse);
     }
