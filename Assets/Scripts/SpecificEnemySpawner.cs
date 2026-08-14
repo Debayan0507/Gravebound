@@ -16,11 +16,15 @@ public class SpecificEnemySpawner : MonoBehaviour
     private List<GameObject> flyingGhosts = new List<GameObject>();
     private bool isSpawning = false;
 
-    void Start()
+    // Start is now a Coroutine to stagger initial spawns
+    IEnumerator Start()
     {
         for (int i = 0; i < maxEnemies; i++)
         {
             SpawnSingleEnemy();
+
+            // Random delay between 0.5s and 2s before spawning the next one
+            yield return new WaitForSeconds(Random.Range(0.5f, 2f));
         }
     }
 
